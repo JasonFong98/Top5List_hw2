@@ -65,7 +65,6 @@ export default class ListCard extends React.Component {
                 />)
         }
         else {
-
             let selectClass = "unselected-list-card";
             if (selected) {
                 selectClass = "selected-list-card";

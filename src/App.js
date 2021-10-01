@@ -144,6 +144,11 @@ class App extends React.Component {
         let modal = document.getElementById("delete-modal");
         modal.classList.remove("is-visible");
     }
+
+    editItemName = (id, newName) =>{
+        this.state.currentList.items[id] = newName;
+        this.db.mutationUpdateList(this.state.currentList);
+    }
     render() {
         return (
             <div id="app-root">
@@ -160,7 +165,8 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <Workspace
-                    currentList={this.state.currentList} />
+                    currentList={this.state.currentList}
+                    editItemName={this.editItemName} />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteModal

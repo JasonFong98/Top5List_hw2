@@ -3,12 +3,9 @@ import Item from "./Item";
 
 export default class Workspace extends React.Component {
 
-    editItemName = (id) => {
-        
-    }
 
     render() {
-        const {currentList} = this.props;
+        const {currentList, editItemName} = this.props;
         if(currentList == null){
         return (
             <div id="top5-workspace">
@@ -41,6 +38,7 @@ export default class Workspace extends React.Component {
                                 name={name}
                                 key={id}
                                 id={id}
+                                editItemName = {editItemName}
                             />
                         ))}
                     </div>

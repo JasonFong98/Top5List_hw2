@@ -5,7 +5,7 @@ export default class Workspace extends React.Component {
 
 
     render() {
-        const {currentList, editItemName} = this.props;
+        const {currentList, editItemName, onStartDrag, onDropped} = this.props;
         if(currentList == null){
         return (
             <div id="top5-workspace">
@@ -31,12 +31,12 @@ export default class Workspace extends React.Component {
                         <div className="item-number">4.</div>
                         <div className="item-number">5.</div>
                     </div>
-                    <div id="edit-items">
-                        
+                    <div id="edit-items" onDrop={onDropped} onDragStart={onStartDrag}>
+                        {console.log(currentList.items)}
                         {currentList.items.map((name, id) => (
-                            <Item 
+                            <Item
                                 name={name}
-                                key={id}
+                                key={currentList.items[id]+id} 
                                 id={id}
                                 editItemName = {editItemName}
                             />

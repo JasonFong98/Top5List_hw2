@@ -28,6 +28,34 @@ class App extends React.Component {
         }
     }
 
+    startDrag = (event) => {
+        event.dataTransfer.setData("id", event.target.getAttribute("id")); 
+    }
+
+    dropped= (event) => {
+        const newIndex = event.target.getAttribute("id").substring(5);
+        const oldIndex = event.dataTransfer.getData("id").substring(5);
+        console.log(newIndex);
+        console.log(oldIndex);
+
+
+        //let newList = { items: this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0])};
+        this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0]);
+        console.log(this.state.currentList);
+        this.setState({
+            currentList: this.state.currentList
+        });
+        
+        event.target.classList.remove("top5-item-dragged-to");
+
+        for(let i = 0; i < this.state.currentList.items.length; i++){
+            console.log(this.state.currentList.items[i]);
+        }
+
+        this.db.mutationUpdateList(this.state.currentList);
+        
+    }
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -108,12 +136,14 @@ class App extends React.Component {
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
         let newCurrentList = this.db.queryGetList(key);
+        //console.log(newCurrentList);
         this.setState(prevState => ({
             currentList: newCurrentList,
             sessionData: prevState.sessionData
         }), () => {
             // ANY AFTER EFFECTS?
         });
+        
 
     }
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
@@ -165,8 +195,15 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <Workspace
+                    key = {(this.state.currentList) ? this.state.currentList.key : null}
                     currentList={this.state.currentList}
-                    editItemName={this.editItemName} />
+                    editItemName={this.editItemName} 
+                    updateList = {this.db.mutationUpdateList}
+                    onStartDrag = {this.startDrag}
+                    onDropped = {this.dropped}
+
+                    />
+                    
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteModal

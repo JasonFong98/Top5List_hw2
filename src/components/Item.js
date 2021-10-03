@@ -9,6 +9,8 @@ class Items extends React.Component {
       editActive: false,
     };
   }
+
+
   handleClick = (event) => {
     if (event.detail === 2) {
       this.handleToggleEdit(event);
@@ -31,6 +33,7 @@ class Items extends React.Component {
     this.setState({ text: event.target.value });
   };
 
+
   handleBlur = (event) => {
     let id = this.props.id;
     let textValue = this.state.text;
@@ -38,8 +41,18 @@ class Items extends React.Component {
     this.handleToggleEdit(event);
   };
 
+  dragOver = (event) => {
+    event.preventDefault();
+    event.target.classList.add("top5-item-dragged-to");
+  }
+
+  dragLeave = (event) => {
+      event.preventDefault();
+    event.target.classList.remove("top5-item-dragged-to");
+  }
+
   render() {
-    const {id } = this.props;
+    const { id } = this.props;
     if (this.state.editActive) {
       return (
         <input
@@ -49,12 +62,19 @@ class Items extends React.Component {
           onKeyPress={this.handleEnter}
           onBlur={this.handleBlur}
           onChange={this.handleUpdate}
-          defaultValue={this.state.text} 
+          defaultValue={this.state.text}
         />
       );
     } else {
       return (
-        <div className="top5-item" id={id} onClick={this.handleClick}>
+        <div
+          className="top5-item"
+          id={"item-" + id}
+          onClick={this.handleClick}
+          draggable={"true"}
+          onDragOver={this.dragOver}
+          onDragLeave={this.dragLeave}
+        >
           {this.state.text}
         </div>
       );

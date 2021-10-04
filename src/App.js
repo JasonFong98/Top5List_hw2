@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 
+import tps from './tps/jsTPS';
+
 // IMPORT DATA MANAGEMENT AND TRANSACTION STUFF
 import DBManager from './db/DBManager';
 
@@ -14,6 +16,8 @@ import Statusbar from './components/Statusbar.js'
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        this.tps = new tps();
 
         // THIS WILL TALK TO LOCAL STORAGE
         this.db = new DBManager();
@@ -96,6 +100,7 @@ class App extends React.Component {
             // PUTTING THIS NEW LIST IN PERMANENT STORAGE
             // IS AN AFTER EFFECT
             this.db.mutationCreateList(newList);
+            this.db.mutationUpdateSessionData(this.state.sessionData);
         });
     }
     renameList = (key, newName) => {
@@ -146,6 +151,7 @@ class App extends React.Component {
     }
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
     closeCurrentList = () => {
+        console.log("hi");
         this.setState(prevState => ({
             currentList: null,
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
@@ -176,8 +182,8 @@ class App extends React.Component {
 
         this.setState(prevState => ({
             sessionData: {
-                nextKey: prevState.sessionData.nextKey + 1,
-                counter: prevState.sessionData.counter + 1,
+                nextKey: prevState.sessionData.nextKey,
+                counter: prevState.sessionData.counter,
                 keyNamePairs: pairs
             }
         }), () => {
@@ -207,13 +213,23 @@ class App extends React.Component {
         this.state.currentList.items[id] = newName;
         this.db.mutationUpdateList(this.state.currentList);
     }
+
+    undo = () => {
+
+    }
+
+    redo = () => {
+
+    }
+
     render() {
         return (
             <div id="app-root">
                 <Banner 
                     title='Top 5 Lister'
+                    undoCallback = {this.undo}
+                    redoCallback = {this.redo}
                     closeCallback={this.closeCurrentList} />
-
 
                 <Sidebar
                     heading='Your Lists'

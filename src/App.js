@@ -25,6 +25,7 @@ class App extends React.Component {
         this.state = {
             currentList : null,
             sessionData : loadedSessionData,
+            deleteListName: null
         }
     }
 
@@ -35,13 +36,10 @@ class App extends React.Component {
     dropped= (event) => {
         const newIndex = event.target.getAttribute("id").substring(5);
         const oldIndex = event.dataTransfer.getData("id").substring(5);
-        console.log(newIndex);
-        console.log(oldIndex);
 
 
         //let newList = { items: this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0])};
         this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0]);
-        console.log(this.state.currentList);
         this.setState({
             currentList: this.state.currentList
         });
@@ -156,13 +154,43 @@ class App extends React.Component {
             // ANY AFTER EFFECTS?
         });
     }
-    deleteList = () => {
+    deleteList = (keyPair) => {
         // SOMEHOW YOU ARE GOING TO HAVE TO FIGURE OUT
         // WHICH LIST IT IS THAT THE USER WANTS TO
         // DELETE AND MAKE THAT CONNECTION SO THAT THE
         // NAME PROPERLY DISPLAYS INSIDE THE MODAL
+
+        this.setState({
+            deleteListName: keyPair
+        })
         this.showDeleteListModal();
     }
+
+    delete = (keyPair) => {
+        let pairs = this.state.sessionData.keyNamePairs;
+        for(let i = 0; i < pairs.length; i++){
+            if(keyPair.key === pairs[i].key){
+                pairs.splice(i, 1);
+            }
+        }
+
+        this.setState(prevState => ({
+            sessionData: {
+                nextKey: prevState.sessionData.nextKey + 1,
+                counter: prevState.sessionData.counter + 1,
+                keyNamePairs: pairs
+            }
+        }), () => {
+            // PUTTING THIS NEW LIST IN PERMANENT STORAGE
+            // IS AN AFTER EFFECT
+            this.db.mutationUpdateSessionData(this.state.sessionData);
+        });
+
+        console.log(this.state.sessionData);
+        this.hideDeleteListModal();
+
+    }
+
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
@@ -185,6 +213,8 @@ class App extends React.Component {
                 <Banner 
                     title='Top 5 Lister'
                     closeCallback={this.closeCurrentList} />
+
+
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}
@@ -206,7 +236,10 @@ class App extends React.Component {
                     
                 <Statusbar 
                     currentList={this.state.currentList} />
+    
                 <DeleteModal
+                    listKeyPair = {this.state.deleteListName}
+                    deleteCallback = {this.delete}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                 />
             </div>

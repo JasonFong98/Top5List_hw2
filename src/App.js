@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 
 import tps from './tps/jsTPS';
+import changeItem from './transactions/ChangeItem_Transaction.js';
+import moveItem from './transactions/MoveItem_Transaction.js';
 
 // IMPORT DATA MANAGEMENT AND TRANSACTION STUFF
 import DBManager from './db/DBManager';
@@ -36,24 +38,22 @@ class App extends React.Component {
     startDrag = (event) => {
         event.dataTransfer.setData("id", event.target.getAttribute("id")); 
     }
-
+q
     dropped= (event) => {
         const newIndex = event.target.getAttribute("id").substring(5);
         const oldIndex = event.dataTransfer.getData("id").substring(5);
 
+        event.target.classList.remove("top5-item-dragged-to");
 
-        //let newList = { items: this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0])};
+        this.addMoveItemTransaction(newIndex, oldIndex);
+    }
+
+    moveItem = (oldIndex, newIndex) => {
         this.state.currentList.items.splice(newIndex, 0, this.state.currentList.items.splice(oldIndex, 1)[0]);
         this.setState({
             currentList: this.state.currentList
         });
         
-        event.target.classList.remove("top5-item-dragged-to");
-
-        for(let i = 0; i < this.state.currentList.items.length; i++){
-            console.log(this.state.currentList.items[i]);
-        }
-
         this.db.mutationUpdateList(this.state.currentList);
         
     }
@@ -211,15 +211,33 @@ class App extends React.Component {
 
     editItemName = (id, newName) =>{
         this.state.currentList.items[id] = newName;
+        this.setState({
+            currentList: this.state.currentList
+        })
         this.db.mutationUpdateList(this.state.currentList);
     }
 
-    undo = () => {
+    addChangeItemTransaction= ( id, newName ) => {
+        let oldName = this.state.currentList.items[id];
+        let transaction = new changeItem(this, id, oldName, newName);
+        this.tps.addTransaction(transaction);
+    }
 
+    addMoveItemTransaction= (oldIndex, newIndex) => {
+        let transaction = new moveItem(this, oldIndex, newIndex);
+        this.tps.addTransaction(transaction);
+    }
+
+    undo = () => {
+        if(this.tps.hasTransactionToRedo){
+            this.tps.undoTransaction();
+        }
     }
 
     redo = () => {
-
+        if(this.tps.hasTransactionToRedo){
+            this.tps.doTransaction();
+        }
     }
 
     render() {
@@ -243,11 +261,10 @@ class App extends React.Component {
                 <Workspace
                     key = {(this.state.currentList) ? this.state.currentList.key : null}
                     currentList={this.state.currentList}
-                    editItemName={this.editItemName} 
+                    editItemName={this.addChangeItemTransaction} 
                     updateList = {this.db.mutationUpdateList}
                     onStartDrag = {this.startDrag}
                     onDropped = {this.dropped}
-
                     />
                     
                 <Statusbar 

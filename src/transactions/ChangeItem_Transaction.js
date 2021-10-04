@@ -1,4 +1,4 @@
-import jsTPS_Transaction from "../../common/jsTPS.js"
+import jsTPS_Transaction from "../tps/jsTPS"
 
 /**
  * ChangeItem_Transaction
@@ -19,10 +19,10 @@ export default class ChangeItem_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.model.changeItem(this.id, this.newText);
+        this.model.editItemName(this.id, this.newText);
     }
     
     undoTransaction() {
-        this.model.changeItem(this.id, this.oldText);
+        this.model.editItemName(this.id, this.oldText);
     }
 }

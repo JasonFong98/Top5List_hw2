@@ -240,9 +240,19 @@ q
         }
     }
 
+    keyPress = () => {
+        let code = window.event;
+        if(code.keyCode == 90){
+            this.undo();
+        }else if(code.keyCode == 89){
+            this.redo();
+        }
+    }
+
     render() {
         return (
             <div id="app-root">
+                {document.addEventListener('keydown', this.keyPress)}
                 <Banner 
                     title='Top 5 Lister'
                     undoCallback = {this.undo}

@@ -47,7 +47,7 @@ q
 
         event.target.classList.remove("top5-item-dragged-to");
 
-        this.addMoveItemTransaction(newIndex, oldIndex);
+        this.addMoveItemTransaction(oldIndex, newIndex);
     }
 
     moveItem = (oldIndex, newIndex) => {
@@ -151,6 +151,13 @@ q
         });
         
         this.tps.clearAllTransactions();
+
+        document.getElementById("undo-button").style.pointerEvents="none";
+        document.getElementById("undo-button").style.opacity = 0.5;
+
+        document.getElementById("redo-button").style.pointerEvents="none";
+        document.getElementById("redo-button").style.opacity = 0.5;
+
 
         document.getElementById("close-button").style.opacity = 1
         document.getElementById("close-button").style.pointerEvents= "auto"

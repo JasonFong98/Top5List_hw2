@@ -154,9 +154,11 @@ export default class jsTPS {
 
         console.log(this.hasTransactionToUndo());
 
-        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.visibility = "hidden" : document.getElementById("redo-button").style.visibility = "visible");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.opacity = "0.5" : document.getElementById("redo-button").style.opacity = "1");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.pointerEvents="none" : document.getElementById("redo-button").style.pointerEvents = "auto");
 
-        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.visibility = "hidden" : document.getElementById("undo-button").style.visibility = "visible");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.opacity = "0.5" : document.getElementById("undo-button").style.opacity = "1");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.pointerEvents="none" : document.getElementById("undo-button").style.pointerEvents = "auto");
 
     }
 
@@ -176,9 +178,11 @@ export default class jsTPS {
             this.performingDo = false;
         }
 
-        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.visibility = "hidden" : document.getElementById("redo-button").style.visibility = "visible");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.opacity = "0.5" : document.getElementById("redo-button").style.opacity = "1");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.pointerEvents="none" : document.getElementById("redo-button").style.pointerEvents = "auto");
 
-        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.visibility = "hidden" : document.getElementById("undo-button").style.visibility = "visible");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.opacity = "0.5" : document.getElementById("undo-button").style.opacity = "1");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.pointerEvents="none" : document.getElementById("undo-button").style.pointerEvents = "auto");
 
     }
 
@@ -195,9 +199,11 @@ export default class jsTPS {
             this.performingUndo = false;
         }
 
-        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.visibility = "hidden" : document.getElementById("redo-button").style.visibility = "visible");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.opacity = "0.5" : document.getElementById("redo-button").style.opacity = "1");
+        if(!this.hasTransactionToRedo() ? document.getElementById("redo-button").style.pointerEvents="none" : document.getElementById("redo-button").style.pointerEvents = "auto");
 
-        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.visibility = "hidden" : document.getElementById("undo-button").style.visibility = "visible");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.opacity = "0.5" : document.getElementById("undo-button").style.opacity = "1");
+        if(!this.hasTransactionToUndo() ? document.getElementById("undo-button").style.pointerEvents="none" : document.getElementById("undo-button").style.pointerEvents = "auto");
 
     }
 

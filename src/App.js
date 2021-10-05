@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import './App.css';
 
 import tps from './tps/jsTPS';
@@ -31,10 +31,12 @@ class App extends React.Component {
         this.state = {
             currentList : null,
             sessionData : loadedSessionData,
-            deleteListName: null
+            deleteListName: null,
         }
+        
+        
     }
-
+    
     startDrag = (event) => {
         event.dataTransfer.setData("id", event.target.getAttribute("id")); 
     }
@@ -142,11 +144,16 @@ q
         //console.log(newCurrentList);
         this.setState(prevState => ({
             currentList: newCurrentList,
-            sessionData: prevState.sessionData
+            sessionData: prevState.sessionData,
+            loadList:true
         }), () => {
             // ANY AFTER EFFECTS?
         });
         
+        this.tps.clearAllTransactions();
+
+        document.getElementById("close-button").style.opacity = 1
+        document.getElementById("close-button").style.pointerEvents= "auto"
 
     }
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
@@ -159,6 +166,16 @@ q
         }), () => {
             // ANY AFTER EFFECTS?
         });
+        this.tps.clearAllTransactions();
+
+        document.getElementById("undo-button").style.pointerEvents="none";
+        document.getElementById("undo-button").style.opacity = 0.5;
+
+        document.getElementById("redo-button").style.pointerEvents="none";
+        document.getElementById("redo-button").style.opacity = 0.5;
+
+        document.getElementById("close-button").style.opacity = 0.5
+        document.getElementById("close-button").style.pointerEvents= "none"
     }
     deleteList = (keyPair) => {
         // SOMEHOW YOU ARE GOING TO HAVE TO FIGURE OUT
@@ -173,6 +190,10 @@ q
     }
 
     delete = (keyPair) => {
+
+        if(keyPair.key == this.state.currentList.key){
+            this.closeCurrentList();
+        }
         let pairs = this.state.sessionData.keyNamePairs;
         for(let i = 0; i < pairs.length; i++){
             if(keyPair.key === pairs[i].key){
@@ -258,7 +279,6 @@ q
                     undoCallback = {this.undo}
                     redoCallback = {this.redo}
                     closeCallback={this.closeCurrentList} />
-
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}
